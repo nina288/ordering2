@@ -1,0 +1,939 @@
+<html>
+   <head>
+      <title>кафе "Доброе утро"</title>
+      <meta charset="UTF-8" />
+      <link
+        href="https://fonts.googleapis.com/css?family=Lobster"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+      <script type="text/javascript" src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>   
+      <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js">
+      </script>
+
+<link rel="stylesheet" href="style.css" /> 
+
+<script
+src="https://kit.fontawesome.com/8c5f8983b2.js"
+crossorigin="anonymous"
+></script>
+
+   </head>
+   
+   <body>       
+    
+            <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-storage.js"></script>
+         <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+         <script>
+           const firebaseConfig = {
+  apiKey: "AIzaSyAj83dq_4FjucVfAWXk_9gFHRc9F0_7mEA",
+  authDomain: "client-order-c2e84.firebaseapp.com",
+  databaseURL: "https://client-order-c2e84-default-rtdb.firebaseio.com",
+  projectId: "client-order-c2e84",
+  storageBucket: "client-order-c2e84.appspot.com",
+  messagingSenderId: "665367054435",
+  appId: "1:665367054435:web:593a380f1fc86244cb5056"
+};
+     
+           firebase.initializeApp(firebaseConfig);
+
+
+
+ $(document).ready(function(){
+  let date = new Date();
+    let mm = date.getMonth() + 1; 
+if (mm < 10) mm = '0' + mm;
+let min=date.getMinutes();
+if (min < 10) min = '0' + min;
+let sec=date.getSeconds();
+if (sec < 10) sec = '0' + sec;
+  $("a[href='#meat']").show();
+$("a[href='#vegetarian']").show();
+ $("a[href='#breakfast']").show();
+ $('#languages').hide();
+ $('.sidebar-section').hide();
+ $('.apartments').hide();
+ $('.steps1').hide();
+ $("a[href='#zakaz']").hide();
+ $('.buttons-search').hide();
+ $('.otshets').hide();
+ let names='';
+let surname='';
+let user =''; 
+let proverka='';
+let email='';
+let password='';
+$(".f").hide();
+   $("a[href='#breakfast']").click(function(){
+  //  $("a[href='#breakfast']").disabled(false);
+  
+
+    //const languages = $('#languages').filterMultiSelect({
+     // placeholderText:"nothing selected",
+    //  filterText:"Filter",
+     // selectAllText:"Select All",
+     // caseSensitive:false,
+     // allowEnablingAndDisabling:true
+//});
+
+
+  var query = firebase.database().ref("breakfast/"); 
+  
+ // $(".contacts-section").append('<button id="btninput">'+ 'Clear input' + '</button>'); 
+  $(".card-container").append('<h2>'+'Вкусные'+'<br />'+'завтраки'+'</h2>');
+  query.once("value", function (snapshot) {
+        snapshot.forEach(function (snapshot) {
+         
+          var breakfast = snapshot.val();
+    
+         var images=breakfast.image;
+      
+       
+      // $(".card-container").append("<div><img src=' " + images + "'/></div>"); 
+      $(".cards").append('<figure >'+'<img src='  + images + '/>'+ '<figcaption>'+'<p>'+ breakfast.title+'</p>' + '<p>'+ '<i class="fas fa-ruble-sign">'+'</i>'+" "+ breakfast.price+'</p>'+'<p>' +'<i class="fas fa-balance-scale">' +" " +'</i>'+ breakfast.weight +'</p>'+'</figcaption>'+'</figure>'); 
+      $('.apartments').show();
+      $('#languages').show();
+      
+     
+
+      // $(".cards").append('<p>'+ breakfast.title + '</p>');//название
+      //    $(".cards").append('<p >' +'<i class="fas fa-ruble-sign">'+'</i>'+ breakfast.price   + '</p>');//вес
+       //   $(".card-container").append('<p >' +'<i class="fas fa-balance-scale">'+'</i>'+ breakfast.weight  + '</p>');//цена
+      
+         
+     let n=0;
+     let t='';   
+        
+          });
+  });
+   
+         $('#tex').keyup(function(){
+         // $('#tex').val('');
+         });
+         
+         $('#tex').bind('input', function(){
+          $('#tex').focus();
+	$("#soft-skills-item").text($(this).val());
+  
+   t = document.getElementById("tex").value;
+   console.log(typeof t);
+    n = +t; 
+console.log(typeof n);
+  
+
+});
+$('#tex').click(function(){
+   $('#tex').val('');
+})
+
+  
+
+      //  $('#btnz').hide();
+       
+      //    $('.sidebar-section').show();
+   // $('.steps1').show();
+      //   $(".soft-skills-item").empty();
+       //   $(".tech-skills-item").empty();
+       //   $(".soft-weight-item").empty();
+       
+query.orderByChild("title").on("child_added", function(data) {
+  $('#btnadd').click(function(){ 
+  
+     if((data.val().title.indexOf(t.toLowerCase())>=0) || (data.val().title.indexOf(t.toUpperCase())>=0)){
+    
+      //  $(".container2").append('<figure class="card">'+'<img src='  + data.val().image + '/>'+'</figure>');
+        $('#tex').val('');
+        $(".tech-skills-item").append('<figure class="card">'+'<img src='  + data.val().image + '/>'+'</figure>'+'<br>');  
+     //   $(".cards").append( '<p>'+'<button id="btnz">'+'Сделать заказ'+'</button>'+'</p>');
+        $(".tech-skills-item").append('<span>'+'"Наименование позиции: "' + data.val().title+'</span>'+'<br>');
+  $(".tech-skills-item").append('<span>'+'"Вес позиции: "' + data.val().weight  +'</span>'+'<br>');
+   $(".tech-skills-item").append('<span>'+'"Цена позиции: "' + data.val().price + '</span>'+'<br>');
+  
+
+  
+             var myRef = firebase.database().ref("Zakaz/");
+  let n= myRef.push({
+        name:names,
+        fam:surname,
+       title:data.val().title,
+       weight:data.val().weight,
+       price:data.val().price,
+      data: date.getDate()+'.'+ mm +'.'+date.getFullYear()
+             
+            });
+     
+            $('#btnotmena').click(function(){
+//firebase.database().ref("Zakaz/").child("name").remove();
+myRef.child(n.key).remove();
+$(".tech-skills-item").empty();  
+          $(".sidebar-section").hide();  
+          $(".steps1").hide();  
+            });
+            $(".sidebar-section").show();  
+          $(".steps1").show(); 
+            
+          } 
+        });
+  // $('#btntitle').hide();
+  // $('#btnz').show();
+        });  
+      
+         // var myRef = firebase.database().ref("Zakaz/").remove();
+         
+                
+        
+
+        $('#btnclear').click(function(){
+          $(".tech-skills-item").empty();        
+        });
+              
+   
+     $("a[href='#breakfast']").hide(); 
+
+    });
+
+    $("a[href='#vegetarian']").click(function(){
+      $("a[href='#vegetarian']").hide();
+    //  $('#btntitle').show();
+  // $('#btnz').hide();
+      var query = firebase.database().ref("vegetarian-mix/");
+ 
+  query.once("value", function (snapshot) {
+        snapshot.forEach(function (snapshot) {
+         
+          var vega = snapshot.val();
+    
+         var images=vega.image;      
+      
+      $(".cards").append('<figure>'+'<img src='  + images + '/>'+ '<figcaption>'+'<p>'+ vega.title+'</p>' + '<p>'+ '<i class="fas fa-ruble-sign">'+'</i>'+" "+ vega.price+'</p>'+'<p>' +'<i class="fas fa-balance-scale">' +" "+'</i>'+ vega.weight +'</p>'+'</figcaption>'+'</figure>'); 
+
+    });
+  });
+    $('#tex').bind('input', function(){
+          $('#tex').focus();
+	$("#soft-skills-item").text($(this).val());
+  
+   t = document.getElementById("tex").value;
+   console.log(typeof t);
+    n = +t; 
+console.log(typeof n);
+  
+
+});
+$('#tex').click(function(){
+   $('#tex').val('');
+});
+
+
+ // var myRef = firebase.database().ref("Zakaz/").remove();
+                  
+        
+
+      
+       //   $('.sidebar-section').show();
+   // $('.steps1').show();
+    //   $(".soft-skills-item").empty();
+    //    $(".tech-skills-item").empty();
+     //   $(".soft-weight-item").empty();
+     var n=0;
+query.orderByChild("title").on("child_added", function(data) {
+  $('#btnadd').click(function(){ 
+    if((data.val().title.indexOf(t.toLowerCase())>=0) || (data.val().title.indexOf(t.toUpperCase())>=0)){
+    //  $(".container2").append('<figure class="card">'+'<img src='  + data.val().image + '/>'+'</figure>');
+      $(".tech-skills-item").append('<figure class="card">'+'<img src='  + data.val().image + '/>'+'</figure>'+'<br>');  
+       $(".tech-skills-item").append('<span>'+'"Наименование позиции: "' + data.val().title+'</span>'+'<br>');
+$(".tech-skills-item").append('<span>'+'"Вес позиции: "' + data.val().weight  +'</span>'+'<br>');
+$(".tech-skills-item").append('<span>'+'"Цена позиции: "' + data.val().price + '</span>'+'<br>'); 
+  
+var myRef = firebase.database().ref("Zakaz/");
+     let n= myRef.push({
+             name:names,
+             fam:surname,
+       title:data.val().title,
+       weight:data.val().weight,
+       price:data.val().price,
+       data:date.getDate()+'.'+ mm +'.'+date.getFullYear()   
+            }); 
+       
+            $('#btnotmena').click(function(){
+//firebase.database().ref("Zakaz/").child("name").remove();
+myRef.child(n.key).remove();
+$(".tech-skills-item").empty();  
+          $(".sidebar-section").hide();  
+          $(".steps1").hide();
+            });
+            $(".sidebar-section").show();  
+          $(".steps1").show();     
+  
+    }
+  });
+});
+    });
+
+$("a[href='#meat']").click(function(){
+  $("a[href='#meat']").hide();
+
+      var query = firebase.database().ref("meat-fish/");
+ 
+  query.once("value", function (snapshot) {
+        snapshot.forEach(function (snapshot) {
+         
+          var meat = snapshot.val();
+    
+         var images=meat.image;      
+      
+      $(".cards").append('<figure class="first">'+'<img src='  + images + '/>'+ '<figcaption>'+'<p>'+ meat.title+'</p>' + '<p>'+ '<i class="fas fa-ruble-sign">'+" "+'</i>'+ meat.price+'</p>'+'<p>' +'<i class="fas fa-balance-scale">'+" " +'</i>'+ meat.weight +'</p>'+'<p>'+'</figcaption>'+'</figure>'); 
+
+    });
+  });
+    $('#tex').bind('input', function(){
+          $('#tex').focus();
+	$("#soft-skills-item").text($(this).val());
+  
+   t = document.getElementById("tex").value;
+   console.log(typeof t);
+    n = +t; 
+console.log(typeof n);
+});
+//$('#tex').click(function(){
+ //  $('#tex').val('');
+//});
+
+
+       // $('#btnz').show();
+
+       
+          $('.sidebar-section').show();
+  //  $('.steps1').show();
+    //   $(".soft-skills-item").empty();
+    //    $(".tech-skills-item").empty();
+     //   $(".soft-weight-item").empty();
+     
+query.orderByChild("title").on("child_added", function(data) {
+  $('#btnadd').click(function(){ 
+   
+    if((data.val().title.indexOf(t.toLowerCase())>=0) || (data.val().title.indexOf(t.toUpperCase())>=0)){
+   //   $(".container2").append('<figure class="card">'+'<img src='  + data.val().image + '/>'+'</figure>');
+      $(".tech-skills-item").append('<figure class="card">'+'<img src='  + data.val().image + '/>'+'</figure>'+'<br>');  
+       $(".tech-skills-item").append('<span>'+'"Наименование позиции: "' + data.val().title+'</span>'+'<br>');
+$(".tech-skills-item").append('<span>'+'"Вес позиции: "' + data.val().weight  +'</span>'+'<br>');
+ $(".tech-skills-item").append('<span>'+'"Цена позиции: "' + data.val().price + '</span>'+'<br>');
+
+ 
+ 
+             var myRef = firebase.database().ref("Zakaz/");
+       let n=  myRef.push({
+       name: names,
+       fam:surname,
+       title:data.val().title,
+       weight:data.val().weight,
+       price:data.val().price,
+       data:date.getDate()+'.'+ mm +'.'+date.getFullYear()    
+            });
+       
+            $('#btnotmena').click(function(){
+//firebase.database().ref("Zakaz/").child("name").remove();
+myRef.child(n.key).remove();
+   $(".tech-skills-item").empty();  
+  $(".sidebar-section").hide();  
+ $(".steps1").hide();  
+});
+           // $('#btnz').hide();  
+           
+            $(".sidebar-section").show();  
+          $(".steps1").show(); 
+
+           
+    }
+  }); 
+  
+ });  
+
+});
+
+$("a[href='#zakaz']").click(function(){
+
+ // $(".buttons-search").show();
+  let sum=0;
+  let d=date.getDate()+'.'+ mm +'.'+date.getFullYear();
+ let h=date.getHours()+':'+ min +':'+sec;
+  //String key = databaseReference.getKey();
+      var query = firebase.database().ref("Zakaz/");
+      
+  query.once("value", function (snapshot) {
+   
+        snapshot.forEach(function (snapshot) {
+         
+          var zakaz = snapshot.val();     
+    
+    //  $(".cards").append('<p>'+ zakaz.title+'</p>'+'<p>' +'<i class="fas fa-balance-scale">' +'</i>'+ zakaz.weight +'</p>' + '<p>'+ '<i class="fas fa-ruble-sign">'+'</i>'+ zakaz.price+'</p>'); 
+   //  console.log(totalzakaz);
+  
+   if((zakaz.name==names)&&(zakaz.fam==surname)){
+ sum=+sum+zakaz.price;
+ 
+   }
+
+    });
+   if((names!='')&&(surname!='')){
+      var myRef = firebase.database().ref("Orders/");
+           myRef.push({
+        data:d,
+       name: names,
+       fam:surname,
+      t:h,
+      summary:sum
+            });
+            
+          }
+
+    confirm(names +" "+"общая сумма всего заказа:'"+ sum +" "+'рублей\r\nТекущая дата/время заказа'+ date.getDate()+'.'+ mm +'.'+date.getFullYear()+" "+date.getHours()+':'+min +':'+ sec );
+  alert(names+" "+ 'Спасибо, что Вы с нами!');
+ // $("a[href='#zakaz']").hide();
+  });
+  
+  
+
+  $(".sidebar-section").hide();  
+          $(".steps1").hide(); 
+//  $("a[href='#zakaz']").hide();
+});
+
+$("a[href='#client']").click(function(){
+
+let clients=confirm("Вы хотите войти в качестве клиента?");
+if(clients==true){
+  $("a[href='#zakaz']").show();
+  $(".otshets").hide();
+  $(".buttons-search").show();
+  $(".steps1").show();
+ names = prompt("Введите Ваше Имя");
+ surname = prompt("Введите Вашу Фамилию");
+while((names==null || names=='') && (surname==null||surname==''))
+{
+ names = prompt("Введите Ваше Имя");
+ surname = prompt("Введите Вашу Фамилию");
+}
+//$("a[href='#zakaz']").show();
+} 
+});
+$("a[href='#register']").click(function(){
+    $(".f").show();
+});
+$('form').on('click', '.password-checkbox', function(){
+	if ($(this).is(':checked')){
+		$('#password-input').attr('type', 'text');
+	} else {
+		$('#password-input').attr('type', 'password');
+	}
+}); 
+$('#reg').click(function(){
+ 
+//proverka = prompt("Введите Email");
+proverka=	$('#t').val();
+     email ='crystalcastle@mail.ru';
+     password=$('#password-input').val();
+   //  password = prompt("Введите пароль");
+$(".otshets").hide();
+if(proverka==email){
+firebase.auth().createUserWithEmailAndPassword(email, password)
+.then(function() {
+      confirm('Вы зарегистрировались успешно');
+    
+   }, function(error) {
+      confirm('Вы уже зарегистрировались') ;
+      
+      $(".otshets").hide(); 
+   });
+  }else{alert('Вы ввели неправильный Email или пароль')}
+   $(".buttons-search").hide();
+   $("a[href='#zakaz']").hide();
+   if((email=='')&&(password==null))
+  alert('Вы не зарегистрировались!');
+  
+  });
+  $('#goon').click(function(){
+  //  var email =prompt(names+" "+ "Введите e-mail") ;
+ // $(".f").hide();
+    firebase.auth().signInWithEmailAndPassword(email, password)
+.then(function() {
+     confirm( 'Вы вошли успешно');
+      $(".otshets").show();
+   }, function(error) {
+      confirm( 'Вы не вошли');
+      $(".otshets").hide();  
+     
+   });
+  
+  
+  
+  });
+
+  $('#goout').click(function(){
+    firebase.auth().signOut() 
+    .then(function() {
+      confirm('Вышли успешно');
+  $(".otshets").hide(); 
+  $(".f").hide();
+   }, function(error) {
+      confirm('Не вышли');  
+   });
+ 
+  });
+  
+   // $(".container2").append('<textarea id="otzov" class="all" cols="4" rows="7">'+'Оставьте свой отзыв: '+'</textarea>'+'<br>');
+  //  $(".container2").append('<input id="text" type="text" placeholder="Введите ваше имя" name="form-text"/>');
+  //  $(".container2").append( <button id="btnotzov" class="all">Оставить комментарий</button>);
+    $('.footer-search input[type="text"]').click(function(){
+//var nam=prompt('Введите ваше Имя');
+var cont=prompt(names+" "+'оставьте свой отзыв','');
+$(".serv-text").empty();
+let d=date.getDate()+'.'+ mm +'.'+date.getFullYear();
+let h=date.getHours()+':'+ min +':'+sec;
+      var myRef = firebase.database().ref("Otzov/");
+           myRef.push({
+        data:d,
+        t:h,
+       name: names,
+       context: cont
+            });
+            $("a[href='#contacts']").show();
+          });
+          $("a[href='#contacts']").click(function(){
+            $("a[href='#contacts']").hide();
+            var myRef = firebase.database().ref("Otzov/").limitToLast(5);
+ myRef.once("value", function (snapshot) {
+       snapshot.forEach(function (snapshot) {
+        
+         var otzov = snapshot.val();
+         $(".serv-text").append('<h3>'+otzov.name+'</h3>'+'<br>'+'<p>'+otzov.context+" "+otzov.data+" "+otzov.t +'</p>');
+        
+    });
+    
+  });
+ });
+
+ $(".otshets").append('<button id="btndate" class="all">'+'Отчет'+'</button>');
+ $(".otshets").append('<button id="btntotal" class="all">'+'Общая сумма заказа'+'</button>');
+ $(".otshets").append('<button id="btnot" class="all">'+'Очистить'+'</button>');
+ $('#btnot').click(function(){
+  $(".tab1").empty();
+  $(".tab2").empty();
+ });
+ $('#btndate').click(function(){
+
+            var myRef = firebase.database().ref("Zakaz/");
+            $(".tab1").append( '<table id="example" class="display" cellspacing="0" width="100%">'+
+        '<thead>'+
+           '<tr>'+
+                
+                '<th width="25%">'+'Фамилия'+'</th>'+
+                '<th width="25%">'+'Наименование'+'</th>'+
+                '<th width="15%">'+'Вес'+'</th>'+
+                '<th width="15%">'+'Цена'+'</th>'+
+               '<th width="25%">'+'Дата'+'</th>'+
+             //  '<th width="25%">'+'Общая сумма заказа'+'</th>'+
+           '</tr>'+
+        '</thead>');
+           
+            myRef.orderByChild("name").on("child_added", function(data) {
+         $(".tab1").append('<table id="example" class="display" cellspacing="0" width="100%">'+  
+                '<tbody>'+
+                   '<tr>'
+                        
+                        +'<td width="25%">'+ data.val().fam +'</td>'
+                       + '<td width="25%">'+data.val().title + '</td>'
+                        +'<td width="15%">'+ data.val().weight + '</td>'
+                        +'<td width="15%">'+ data.val().price +" " +'рублей' + '</td>'
+                        +'<td width="25%">'+ data.val().data + '</td>'
+                       // +'<td width="25%">'+ data.val().summary + '</td>'
+                   + '</tr>'
+                    
+               + '</tbody>'
+           + '</table>');
+        
+    });      
+ });
+
+ $('#btntotal').click(function(){
+
+            var myRef = firebase.database().ref("Orders/");
+            $(".tab2").append( '<br>'+'<table id="example" class="display" cellspacing="0" width="100%">'+
+        '<thead>'+
+           '<tr>'+
+                
+                '<th width="25%">'+'Имя'+'</th>'+
+                '<th width="25%">'+'Фамилия'+'</th>'+
+                '<th width="15%">'+'Дата'+'</th>'+
+                '<th width="15%">'+'Время'+'</th>'+
+               '<th width="25%">'+'Общая сумма'+'</th>'+
+             //  '<th width="25%">'+'Общая сумма заказа'+'</th>'+
+           '</tr>'+
+        '</thead>');
+           
+            myRef.orderByChild("name").on("child_added", function(data) {
+         $(".tab2").append('<table id="example" class="display" cellspacing="0" width="100%">'+  
+                '<tbody>'+
+                   '<tr>'
+                        
+                        +'<td width="25%">'+ data.val().name +'</td>'
+                       + '<td width="25%">'+data.val().fam + '</td>'
+                        +'<td width="15%">'+ data.val().data + '</td>'
+                        +'<td width="15%">'+ data.val().t  + '</td>'
+                        +'<td width="25%">'+ data.val().summary +" " +'руб.'+ '</td>'
+                       // +'<td width="25%">'+ data.val().summary + '</td>'
+                   + '</tr>'
+                    
+               + '</tbody>'
+           + '</table>');
+        
+    });
+       
+ });
+
+ 
+  });
+
+
+// Create a reference from a Google Cloud Storage URI
+//var gsReference = storage.refFromURL('gs://client-order-c2e84.appspot.com/photo');
+
+// Create a reference from an HTTPS URL
+// Note that in the URL, characters are URL escaped!
+
+         </script>
+ <header>
+  <nav>
+    <input type="checkbox" id="checkbox-menu" />
+    <label for="checkbox-menu">
+      <ul class="menu touch">
+        <li><a class="logo" href="#">Доброе утро</a></li>
+        <li><a href="#breakfast">Завтраки</a></li>
+        <li><a href="#vegetarian">Овощной микс</a></li>
+        <li><a href="#meat">Мясо, рыба, птица</a></li>
+       
+        <li><a  href="#contacts">Обратная связь</a></li>
+        <li><a href="#zakaz">Заказы</a></li>
+        <li><a href="#client">Регистрация</a>  </li>
+        <li><a href="#register">Администратор</a>  </li>
+         
+       
+        
+      </ul>
+      <span class="toggle">☰</span>
+    </label>
+     <section class="f">
+      <form>
+        <span> Регистрация администратора</span><br>
+        <input type="text" id="t" placeholder="Введите Email">
+        <div class="password">
+      <input type="password" id="password-input" placeholder="Введите пароль" name="password">
+        <label><input type="checkbox" class="password-checkbox"> Показать пароль</label><br>
+    <span>    <button id="reg" >Зарегистрироваться</button></span><br>
+    <span>   <button id="goon" >Войти</button></span>
+    <span>  <button id="goout" >Выйти</button></span>
+      </div>
+    </form>
+    </section>
+  </nav>
+ 
+</header>
+
+<main>
+  <div class="container">
+  <section class="intro wrapper">
+    <div class="intro-img">
+      <p class="intro-text">
+      
+      </p>
+    </div>
+    
+  </section>
+ 
+  
+  <section class="stats wrapper">
+    <div class="stats-text">
+      <h2>Доброе<br />утро!</h2>
+          <p>
+              Дорогие друзья, рады приветствовать вас на нашей странице!
+              Будем знакомы? 
+              Наш формат — это уютное, семейное местечко, где вы сможете с комфортом
+               и удовольствием насладиться вкусной кухней.
+              
+          </p>
+    </div>
+    <div class="stats-num">
+      <div class="stats-line">
+        <div class="square">
+          <span class="stats-square"><a href="https://www.instagram.com/stories/highlights/18059574928278877/">Тайский завтрак</a></span>
+          <span class="square-text">Арахисовая паста</span>
+          <span class="square-text">Удон с соусом терияки</span>
+          <span class="square-text">Креветки</span>
+          <span class="square-text">Утка</span>
+        </div>
+        <div class="square">
+          <span class="stats-square"><a href="https://www.instagram.com/stories/highlights/18059574928278877/">Местный гастротур</a></span>
+          <span class="square-text">Глазированное филе судака</span>
+          <span class="square-text">молодой картофель</span>
+          <span class="square-text">микс зелени</span>
+          <span class="square-text">индийский соус "Чатни"</span>
+        </div>
+      </div>
+      <div class="stats-line">
+        <div class="square">
+          <span class="stats-square"><a href="https://www.instagram.com/stories/highlights/18059574928278877/">Техасский гастротур </a></span>
+          <span class="square-text">Бифштекс из говядины</span>
+          <span class="square-text">Печеный картофель</span>
+          <span class="square-text">Перечный соус</span>
+          <span class="square-text">индийский соус "Чатни"</span>
+        </div>
+        <div class="square">
+          <span class="stats-square"><a href="https://www.instagram.com/stories/highlights/18059574928278877/">Тайский гастротур</a></span>
+          <span class="square-text">Креветки и цыпленок</span>
+          <span class="square-text">Гриль с рисовой лапшой</span>
+          <span class="square-text">Арахисовая паста</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="apartments">
+    <div class="wrapper apart">
+ 
+      <div class="cards">
+       
+          
+      </div>
+      <div class="buttons-search">
+     
+        
+          <input id="tex" type="text" placeholder="Поиск" />
+         <button id="btnadd" class="all">Добавить</button>
+        
+            
+      
+       
+       
+     
+      </div>
+    </div>
+  </section>
+  <section class="steps">
+
+    <div class="wrapper">
+      <h2></h2>
+      <p class="steps-text">
+  
+      </p>
+
+      <p class="steps-text mbtext">
+     
+        <br />сделайте ваш выбор!
+      </p>
+      <div class="steps-container">
+        <div class="stepblock" id="stepbl1">
+          <p class="step-num"> 01</p>
+          <h4><span>№ 01</span>Найдите свой заказ</h4>
+          <span class="step-info">
+           "В нашем кафе вы найдете только самые вкусные блюда!
+           Вкусные Завтраки, 
+           блюда из мяса, птицы, рыбы, напитки из нашего бара."
+           1 шаг: Зарегистрируйтесь!
+          </span>
+          <p class="stepinfolast" id="stepbrdr2">Найдите то, что вы ищите</p>
+        </div>
+        <div class="stepblock" id="stepbl2">
+          <p class="step-num"> 02</p>
+          <h4><span>№ 02</span>Выберете свой заказ</h4>
+          <span class="step-info">
+           2 шаг: Сделайте свой выбор любимых блюд!
+          </span>
+          <p class="stepinfolast" id="stepbrdr1">Выберите то, что вы желаете</p>
+        </div>
+        <div class="stepblock" id="stepbl3">
+          <p class="step-num"> 03</p>
+          <h4><span>№ 03</span>Сделайте свой заказ</h4>
+          <span class="step-info">
+          3 шаг: Закажите выбранные блюда у нас!
+          </span>
+          <p class="stepinfolast" id="stepbrdr1">Закажите то, что вы выбрали</p>
+        </div>
+      </div>
+    </div>
+   
+  
+    
+  </section>
+  
+  <section class="steps1">
+
+    <div class="wrapper">
+
+      <p class="steps-text mbtext">
+       Блюда для заказа
+        <br />сделайте ваш выбор!
+      </p>
+        <aside class="sidebar-section">
+          <div class="wrapper">                       
+         <div class="contacts-section">
+             <h3 class="sidebar-title">Основная информация</h3>
+             </div>
+                     <div class="tech-skills-section">
+                       <h3 class="sidebar-title">Выбранные блюда</h3>
+                       <div class="tech-skills-list">
+                           <div class="tech-skills-item"><div class="tech-skills-item-text"></div> </div>   
+                       </div>
+                       </div>
+                       <button id="btnclear" class="all">Очистить</button>   
+                       </div> 
+         </aside>
+        
+         <button id="btnotmena" class="all">Отменить выбор</button>
+        </div>
+        </section>
+       
+        <section class="services wrapper">
+          <h2>Контактная информация</h2>
+          <p>Семейное кафе.</p>
+          <p>Авторская кухня.</p>
+          <p>Халяльные продукты.</p>
+  
+          <div class="serv-container">
+            <div class="serv-img-container">
+              <img src="https://firebasestorage.googleapis.com/v0/b/client-order-c2e84.appspot.com/o/photo%2Fcontact.png?alt=media&token=329ffd4f-7f95-4047-9756-e97e298e48da" alt="">
+            </div>
+            <div class="serv-text">
+              <h4>Отзывы</h4>
+           
+             
+           
+              
+           
+           
+              
+              
+           
+          </div>
+        </section>
+        <section class="agents">
+          <div class="wrapper">
+            <h2>Добро пожаловать в кафе!</h2>
+            <p>Вкусно, атмосферно, уютно.</p>
+               <p> Кафе Доброе утро открыто с 8.00 до 23.00.
+                 <br> С нашими блюдами гастро-туры по всему свету.
+               </p>
+               <div class="agent-cards">
+                 <div class="agent-card">
+                   <img src="https://firebasestorage.googleapis.com/v0/b/client-order-c2e84.appspot.com/o/photo%2Fkafe1%20(1).png?alt=media&token=c5d0d16d-d1bd-464a-9a52-262f6ad4d34b" alt="">
+                   <div class="agent-info">
+                      <p>Японский гастротур</p>
+                   <div class="agent-block">
+                     <p class="agent-name">
+                       Японский гастротур
+                     </p>
+                     <div class="social">
+                        <a href="#"> <i class="fab fa-twitter"></i></a>
+                          <a href="#"> <i class="fab fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/dobroye.u/?igshid=12a07p3ae3gdm"> <i class="fab fa-instagram"></i></a>
+                     </div>
+                   </div>
+                   </div>
+                 </div>
+                 <div class="agent-card">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/client-order-c2e84.appspot.com/o/photo%2Fkafe2%20(1).png?alt=media&token=5df75d5d-cd84-4be5-a39c-f19aab4df04b" alt="">
+                    <div class="agent-info">
+                       <p>Турецкий гастротур</p>
+                    <div class="agent-block">
+                      <p class="agent-name">
+                       Турецкий гастротур
+                      </p>
+                      <div class="social">
+                    <a href="#"> <i class="fab fa-twitter"></i></a>
+                    <a href="#"> <i class="fab fa-facebook"></i></a>
+                      <a href="https://www.instagram.com/dobroye.u/?igshid=12a07p3ae3gdm"> <i class="fab fa-instagram"></i></a>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="agent-card">
+                      <img src="https://firebasestorage.googleapis.com/v0/b/client-order-c2e84.appspot.com/o/photo%2Fkafe3%20(1).png?alt=media&token=f6464b51-9c00-4fc8-b60e-561f74fc5e83" alt="">
+                      <div class="agent-info">
+                         <p>Посетите нас</p>
+                      <div class="agent-block">
+                        <p class="agent-name">
+                         Просто посетите нас
+                        </p>
+                        <div class="social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                              <a href="#"> <i class="fab fa-facebook"></i></a>
+                                <a href="https://www.instagram.com/dobroye.u/?igshid=12a07p3ae3gdm"> <i class="fab fa-instagram"></i></a>
+                        </div>
+                      </div>
+                      </div>
+                    </div>
+               </div>
+              </div>
+          </section>
+          <section class="otshets">
+
+            <div class="wrapper">
+              <div class="tab1">
+              </div>
+              <div class="tab2">
+                </div>
+           
+              </div>
+              </section>
+</div>
+</main>
+<footer>
+  <div class="wrapper">
+    <div class="footer-block">
+      <div class="footer-logo">
+        <h3>Кафе Доброе утро</h3>
+        <h3>Посетите нас</h3>
+      </div>
+    <div class="footer-search">
+      <input type="text" placeholder="Напишите нам">
+    </div>
+    </div>
+    <hr>
+    <div class="footer-links">
+      <div class="footer-links-logo">
+       <h4>Доброе утро</h4> 
+      </div>
+      <div class="footer-link">
+          <p>Доброе утро</p>
+          <a href="#"><p>Телефон <br> 8(934)0006-444</p></a>
+         
+      </div>
+      <div class="footer-link">
+          <p>Доброе утро</p>
+          <a href="#"><p>Телефон <br> 8(934)0006-444</p></a>
+         
+      </div>
+      <div class="footer-link">
+          <p>Доброе утро</p>
+          <a href="#"><p>Телефон <br> 8(934)0006-444</p></a>
+         
+      </div>
+      <div class="footer-link">
+          <p>Доброе утро</p>
+          <a href="#"> <p>Телефон <br> 8(934)0006-444</p></a>
+         
+      </div>
+    </div>
+  </div>
+</footer>
+         
+  
+   </body>
+</html>
